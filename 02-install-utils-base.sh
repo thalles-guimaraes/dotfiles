@@ -34,7 +34,7 @@ echo "-> Internet OK!"
 # 2. ATUALIZAÇÃO E SINCRONIZAÇÃO
 # ---------------------------------------------------
 echo "[2/6] Sincronizando repositórios..."
-sudo pacman -Syyu --noconfirm
+sudo pacman -Syyuu --noconfirm
 
 # ---------------------------------------------------
 # 3. PACOTES ESSENCIAIS E ÁUDIO

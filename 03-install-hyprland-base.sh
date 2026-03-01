@@ -11,5 +11,5 @@ echo "========================================="
 # 6. INSTALANDO HYPRLAND (E ECOSSISTEMA)
 # ---------------------------------------------------
 echo "[6/6] Instalando Hyprland..."
-sudo pacman -S --needed --noconfirm hyprland kitty firefox waybar rofi-wayland dunst xdg-desktop-portal-hyprland polkit-kde-agent
+sudo pacman -S --needed --noconfirm hyprland kitty firefox waybar #rofi-wayland dunst xdg-desktop-portal-hyprland polkit-kde-agent
 
