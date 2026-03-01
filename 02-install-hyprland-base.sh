@@ -1,46 +1,108 @@
 #!/bin/bash
 
+# Habilita parada por erro, mas desativaremos temporariamente quando necessário
 set -e
 
-timedatectl set-ntp true
+echo "========================================="
+echo "  SCRIPT DE PÓS-INSTALAÇÃO - HYPRLAND    "
+echo "========================================="
 
-# Conectar wifi
-nmcli device wifi list
+# ---------------------------------------------------
+# 1. VERIFICAÇÃO DE INTERNET
+# ---------------------------------------------------
+echo "[1/6] Verificando conexão de rede..."
 
-nmcli device wifi connect NOME --ask
+if ! ping -c 1 google.com &> /dev/null; then
+    echo "[!] Sem internet detectada."
+    
+    set +e 
+    read -p "Deseja conectar ao Wi-Fi agora? (s/n): " CONECTAR_WIFI
+    
+    if [[ "${CONECTAR_WIFI,,}" == "s" ]]; then
+        nmcli device wifi list
+        read -p "Digite o SSID (Nome exato da rede): " WIFI_SSID
+        nmcli device wifi connect "$WIFI_SSID" --ask
+    else
+        echo "Conexão com a internet é obrigatória. Saindo..."
+        exit 1
+    fi
+    set -e 
+fi
+echo "-> Internet OK!"
 
-# Ping google.com
+# ---------------------------------------------------
+# 2. ATUALIZAÇÃO E SINCRONIZAÇÃO
+# ---------------------------------------------------
+echo "[2/6] Sincronizando repositórios..."
+sudo pacman -Syyu --noconfirm
 
-sudo pacman -Syyu
+# ---------------------------------------------------
+# 3. PACOTES ESSENCIAIS E ÁUDIO
+# ---------------------------------------------------
+echo "[3/6] Instalando ferramentas base, fontes e PipeWire..."
+# Adicionei 'git' e 'base-devel' por garantia, pois o YAY e o AUR precisam deles
+sudo pacman -S --needed --noconfirm \
+    base-devel git btop wget unzip zip bash-completion openssh python fuse2 cmake \
+    reflector sof-firmware alsa-utils exfatprogs dosfstools smartmontools tmux \
+    pipewire wireplumber pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse \
+    lib32-pipewire pavucontrol noto-fonts noto-fonts-emoji noto-fonts-cjk \
+    ttf-liberation otf-font-awesome ttf-jetbrains-mono ttf-jetbrains-mono-nerd
 
-# Nvidia
-# sudo pacman -S nvidia nvidia-utils lib32-nvidia-utils
-# configurar esse antes ou depois do hyprland ?
+# ---------------------------------------------------
+# 4. AUR HELPER (YAY) - MOVIDO PARA CIMA!
+# ---------------------------------------------------
+echo "[4/6] Instalando YAY (Necessário para drivers Legacy da NVIDIA)..."
+if ! command -v yay &> /dev/null; then
+    git clone https://aur.archlinux.org/yay.git yay-build
+    cd yay-build
+    makepkg -si --noconfirm
+    cd ..
+    rm -rf yay-build
+else
+    echo "-> YAY já está instalado!"
+fi
 
-# AMD
-sudo pacman -S xf86-video-amdgpu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon
+# ---------------------------------------------------
+# 5. DETECÇÃO DE HARDWARE (AGORA COM YAY DISPONÍVEL)
+# ---------------------------------------------------
+echo "[5/6] Detectando Hardware Específico..."
 
-# pacotes essenciais 
-sudo pacman -S btop wget unzip zip bash-completion openssh python fuse2 cmake reflector sof-firmware alsa-utils exfatprogs dosfstools smartmontools tmux 
+# Verifica GPU
+if lspci | grep -iE 'vga|3d' | grep -iq 'nvidia'; then
+    echo "-> Placa NVIDIA detectada (Desktop)."
+    # Usando o YAY para baixar a versão 580xx do AUR
+    yay -S --needed --noconfirm nvidia-580xx-dkms nvidia-580xx-utils lib32-nvidia-580xx-utils egl-wayland
+    
+    echo "--------------------------------------------------------"
+    echo "⚠️ ATENÇÃO USUÁRIO NVIDIA ⚠️"
+    echo "Após o script, adicione 'nvidia_drm.modeset=1' na linha"
+    echo "GRUB_CMDLINE_LINUX_DEFAULT do seu /etc/default/grub"
+    echo "e rode: sudo grub-mkconfig -o /boot/grub/grub.cfg"
+    echo "--------------------------------------------------------"
+    sleep 3
 
-# Instalando AUR helper
-git clone https://aur.archlinux.org/yay.git yay
-cd yay
-makepkg -si 
-cd .. 
-rm -rf yay
+elif lspci | grep -iE 'vga|3d' | grep -iq 'amd'; then
+    echo "-> GPU AMD detectada (Notebook)."
+    sudo pacman -S --needed --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon
+fi
 
-# Instalar fontes uteis
-sudo pacman -S noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-liberation otf-font-awesome ttf-jetbrains-mono ttf-jetbrains-mono-nerd
+# Verifica Bluetooth
+if dmesg | grep -iq bluetooth || lsusb | grep -iq bluetooth || lspci | grep -iq bluetooth; then
+    echo "-> Adaptador Bluetooth detectado (Instalando bluez)."
+    sudo pacman -S --needed --noconfirm bluez bluez-utils blueman
+    sudo systemctl enable bluetooth
+else
+    echo "-> Nenhum Bluetooth físico detectado. Pulando..."
+fi
 
-# Drivers de audio
-sudo pacman -S pipewire wireplumber pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse lib32-pipewire pavucontrol
+# ---------------------------------------------------
+# 6. INSTALANDO HYPRLAND (E ECOSSISTEMA)
+# ---------------------------------------------------
+echo "[6/6] Instalando Hyprland..."
+sudo pacman -S --needed --noconfirm hyprland kitty firefox waybar rofi-wayland dunst xdg-desktop-portal-hyprland polkit-kde-agent
 
-# Bluetooth (se houver)
-sudo pacman -S bluez bluez-utils
-sudo systemctl enable bluetooth
-
-# Essenciais
-sudo pacman -S hyprland kitty firefox
-
-
+echo "========================================="
+echo " INSTALAÇÃO CONCLUÍDA COM SUCESSO!       "
+echo " Lembre-se de configurar o GRUB se for NVIDIA. "
+echo " Digite 'Hyprland' para iniciar.         "
+echo "========================================="
