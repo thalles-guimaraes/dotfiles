@@ -10,6 +10,6 @@ echo "========================================="
 # ---------------------------------------------------
 # 6. INSTALANDO HYPRLAND (E ECOSSISTEMA)
 # ---------------------------------------------------
-echo "[6/6] Instalando Hyprland..."
+echo "Instalando Hyprland..."
 sudo pacman -S --needed --noconfirm hyprland kitty firefox waybar hyprpolkitagent hyprpaper dunst hyprlauncher nemo xdg-desktop-portal-hyprland wl-clipboard #rofi-wayland polkit-kde-agent
 
