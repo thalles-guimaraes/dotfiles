@@ -40,7 +40,6 @@ sudo pacman -Syyu --noconfirm
 # 3. PACOTES ESSENCIAIS E ÁUDIO
 # ---------------------------------------------------
 echo "[3/6] Instalando ferramentas base, fontes e PipeWire..."
-# Adicionei 'git' e 'base-devel' por garantia, pois o YAY e o AUR precisam deles
 sudo pacman -S --needed --noconfirm \
     base-devel git btop wget unzip zip bash-completion openssh python fuse2 cmake \
     reflector sof-firmware alsa-utils exfatprogs dosfstools smartmontools tmux \
