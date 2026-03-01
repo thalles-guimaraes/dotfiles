@@ -122,12 +122,25 @@ configurar_senhas() {
     echo "--------------------------------"
     echo "  Definição de Senhas           "
     echo "--------------------------------"
-    # Fora do Here-Doc para permitir digitação no teclado
+    
+    # Desativa a parada por erro temporariamente
+    set +e 
+
     echo "-> Senha do ROOT:"
-    arch-chroot /mnt passwd
+    # O loop continua rodando enquanto o comando passwd falhar
+    while ! arch-chroot /mnt passwd; do
+        echo "[!] As senhas não coincidem ou ocorreu um erro. Tente novamente."
+        sleep 1
+    done
 
     echo "-> Senha do usuário THALLES:"
-    arch-chroot /mnt passwd thalles
+    while ! arch-chroot /mnt passwd thalles; do
+        echo "[!] As senhas não coincidem ou ocorreu um erro. Tente novamente."
+        sleep 1
+    done
+
+    # Reativa a parada por erro para o restante do script
+    set -e
 }
 
 # ==========================================
