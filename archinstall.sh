@@ -176,8 +176,34 @@ particionar_dual_boot() {
     echo "--------------------------------"
     echo " MODO DUAL BOOT (PRESERVA DADOS)"
     echo "--------------------------------"
+    
+    # 1. Mostra os discos disponíveis primeiro
+    echo "Discos disponíveis no sistema:"
+    lsblk -d -o NAME,SIZE,MODEL
+    echo "--------------------------------"
+    
+    set +e
+    read -p "Voce precisa criar ou redimensionar partições agora? (s/N): " CRIAR_PART
+    
+    if [[ "${CRIAR_PART,,}" == "s" ]]; then
+        read -p "Digite o disco que deseja particionar (ex: /dev/sda ou /dev/nvme0n1): " DISCO_ALVO
+        if [ -b "$DISCO_ALVO" ]; then
+            # Abre o cfdisk para o usuário gerenciar as partições
+            cfdisk "$DISCO_ALVO"
+            echo "Aguardando o sistema reconhecer as novas partições..."
+            sleep 2
+        else
+            echo "[ERRO] Disco inválido ou não encontrado. Abortando."
+            exit 1
+        fi
+    fi
+    set -e
+
+    echo "--------------------------------"
+    echo " Lista atualizada de partições: "
     lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT
-    echo "[!] Use partições que você já criou previamente."
+    echo "--------------------------------"
+    echo "[!] Digite os caminhos exatos das partições que você separou para o Arch."
     
     set +e
     read -p "Partição EFI existente (ex: /dev/sda1): " EFI_PART
@@ -186,7 +212,7 @@ particionar_dual_boot() {
     set -e
 
     if [ ! -b "$EFI_PART" ] || [ ! -b "$ROOT_PART" ]; then
-        echo "Partições obrigatórias inválidas. Abortando."
+        echo "[ERRO] Partições obrigatórias (EFI ou ROOT) inválidas. Abortando."
         exit 1
     fi
 
@@ -199,9 +225,10 @@ particionar_dual_boot() {
     fi
 
     mount "$ROOT_PART" /mnt
-    mount --mkdir "$EFI_PART" /mnt/boot # APENAS MONTA A EFI, NÃO FORMATA!
+    # APENAS MONTA A EFI, NÃO FORMATA PARA NÃO QUEBRAR O WINDOWS!
+    mount --mkdir "$EFI_PART" /mnt/boot 
     
-    # Windows usa tempo local na placa-mãe. Isso evita bugs de hora.
+    # Windows usa tempo local na placa-mãe. Isso evita bugs de hora no Dual Boot.
     CLOCK_OPTS="--localtime"
 }
 
