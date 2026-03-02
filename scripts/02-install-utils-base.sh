@@ -45,7 +45,7 @@ sudo pacman -S --needed --noconfirm \
     reflector sof-firmware alsa-utils exfatprogs dosfstools smartmontools tmux \
     pipewire wireplumber pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse \
     lib32-pipewire pavucontrol noto-fonts noto-fonts-emoji noto-fonts-cjk \
-    ttf-liberation otf-font-awesome ttf-jetbrains-mono ttf-jetbrains-mono-nerd
+    ttf-liberation otf-font-awesome ttf-jetbrains-mono ttf-jetbrains-mono-nerd xdg-user-dirs
 
 # ---------------------------------------------------
 # 4. AUR HELPER (YAY) - MOVIDO PARA CIMA!
@@ -80,7 +80,7 @@ if lspci | grep -iE 'vga|3d' | grep -iq 'nvidia'; then
     echo "--------------------------------------------------------"
     sleep 3
 
-elif lspci | grep -iE 'vga|3d' | grep -iq 'amd'; then
+elif lspci -vnn | grep -iE 'VGA|3D' | grep -iq 'Radeon\|AMD'; then
     echo "-> GPU AMD detectada (Notebook)."
     sudo pacman -S --needed --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon
 fi
@@ -93,6 +93,9 @@ if dmesg | grep -iq bluetooth || lsusb | grep -iq bluetooth || lspci | grep -iq 
 else
     echo "-> Nenhum Bluetooth físico detectado. Pulando..."
 fi
+
+
+xdg-user-dirs-update
 
 echo "========================================="
 echo " INSTALAÇÃO CONCLUÍDA COM SUCESSO!       "
