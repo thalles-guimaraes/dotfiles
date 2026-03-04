@@ -26,14 +26,14 @@ sudo systemctl enable sddm.service
 # ------------------
 # ADICIONAR PERGUNTA PARA O USUÁRIO SE ELE QUER PASSAR POR ESSA PARTE
 echo "Instalando software uteis e configurando..."
-sudo pacman -S --noconfirm waybar hyprpaper rofi-wayland xdg-utils cliphist thunar grim slurp yazi code zsh fastfetch
-yay -S --noconfirm zen-browser-bin vesktop-bin
+sudo pacman -S --noconfirm waybar hyprpaper rofi-wayland xdg-utils cliphist thunar grim slurp yazi code zsh fastfetch firefox
+yay -S --noconfirm vesktop-bin
 # WAYBAR: Barra padrão : exec-once = waybar
 # hyprpaper: papel de parede : exec-once = hyprpaper
 # ROFI-WAYLAND : abre programas, tem plugins (calculadora, seletor de emojis, clipboard, menu, etc), temas bons, usa .rasi : TROCAR $menu para rofi no hyprland.conf 
-# ZEN-BROWSER: Browser : alterar no hyprland.conf
 # Vesktop : discord que da pra trocar cor e É WAYLAND
 # cliphist: é um clipboard, legal instalar o 'xdg-utils', ja instala o 'wl-clipboard' : exec-once OBS: Da pra usar com o rofi de algum jeito
+# firefox: browser, mucho bom
 # thunar: gerenciador de arquivos com extensões
     #extensões (Ações Personalizadas): O superpoder do Thunar é o "Custom Actions". Você pode criar scripts para fazer qualquer coisa (ex: clicar com botão direito e "Abrir no VSCode", "Converter imagem para WebP", "Enviar para o Discord") e adicionar no menu dele.
     #Arquivos de Configuração: Ele guarda as configurações em arquivos de texto (dentro de ~/.config/Thunar/), incluindo as suas Ações Personalizadas (no arquivo uca.xml), então dá para restaurar o seu setup facilmente, embora não seja tão "limpo" quanto o Yazi.
@@ -61,9 +61,10 @@ ln -s ~/dotfiles/.config/hypr ~/.config/hypr
 # ------------------
 # nemo : gerenciador de arquivos (usa gvfs também, precisa instalar) (tem extensões, como o nautilus)
 # nautilus: gerenciador de arquivos (também tem extensões uteis)
-# firefox: browser, mucho bom
 # Kitty: emulador de terminal que vem por padrão no hyprland
 # network-manager-applet  ?
+# ZEN-BROWSER: Browser : alterar no hyprland.conf
+
 
 
 # ------------------
