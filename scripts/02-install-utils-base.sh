@@ -45,7 +45,8 @@ sudo pacman -S --needed --noconfirm \
     reflector sof-firmware alsa-utils exfatprogs dosfstools smartmontools tmux \
     pipewire wireplumber pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse \
     lib32-pipewire pavucontrol noto-fonts noto-fonts-emoji noto-fonts-cjk \
-    ttf-liberation otf-font-awesome ttf-jetbrains-mono ttf-jetbrains-mono-nerd xdg-user-dirs
+    ttf-liberation otf-font-awesome ttf-jetbrains-mono ttf-jetbrains-mono-nerd xdg-user-dirs \
+    network-manager-applet foot
 
 # ---------------------------------------------------
 # 4. AUR HELPER (YAY) - MOVIDO PARA CIMA!

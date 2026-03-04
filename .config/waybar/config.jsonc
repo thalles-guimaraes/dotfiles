@@ -24,11 +24,17 @@
   // Choose the order of the modules
   "modules-left": ["custom/icon", "hyprland/window"],
   "modules-center": ["hyprland/workspaces"],
-  "modules-right": ["tray", "clock"],
+  "modules-right": ["custom/wifi", "tray", "clock"],
 
   "custom/icon": {
     "format": ""
   },
+  
+  "custom/wifi": {
+    "format": " ",
+    "on-click": "foot -e nmtui",
+    "tooltip": false
+},
 
   "hyprland/window": {
     "separate-outputs": true,
