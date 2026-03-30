@@ -21,9 +21,10 @@ sudo systemctl enable sddm.service
 # ------------------
 echo "Instalando software uteis e configurando..."
 sudo pacman -S --noconfirm waybar hyprpaper rofi-wayland xdg-utils \
- cliphist thunar  grim slurp yazi fastfetch firefox eog mpv \
+ cliphist grim slurp yazi fastfetch firefox eog mpv \
  starship zsh-autosuggestions zsh-syntax-highlighting fzf \
- adw-gtk-theme qt6ct qt5ct kvantum breeze-icons obsidian hypridle hyprlock
+ adw-gtk-theme qt6ct qt5ct kvantum breeze-icons obsidian hypridle hyprlock \
+ thunar thunar-archive-plugin file-roller tumbler ffmpegthumbnailer gvfs thunar-volman
 
 yay -S --noconfirm visual-studio-code-bin vesktop-bin systemd-numlockontty rofi-calc
 

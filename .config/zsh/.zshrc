@@ -45,12 +45,3 @@ setopt incappendhistory     # salva imediatamente cada comando
 # (Opcional, mas recomendado)
 setopt hist_ignore_dups     # evita duplicados
 setopt hist_ignore_space    # ignora comandos com espaço no início
-
-startSiteCdcc() {
-  (cd "/home/thalles/Documents/programação/cdcc/backend" && ./mvnw spring-boot:run) &
-  (cd "/home/thalles/Documents/programação/cdcc/frontend" && npm start) &
-
-  trap "echo 'Encerrando tudo...'; kill 0" INT
-
-  wait
-}
