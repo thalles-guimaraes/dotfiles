@@ -63,20 +63,34 @@
       "on-click": "shift_up"
     }
   },
-  "battery": {
-    "bat": "BAT0",
-    "interval": 60,
-    "states": {
-      "warning": 30,
-      "critical": 15
-    },
-    "events": {
-      "on-discharging-warning": "notify-send -u normal 'Low Battery'",
-      "on-discharging-critical": "notify-send -u critical 'Very Low Battery'",
-      "on-charging-100": "notify-send -u normal 'Battery Full!'"
-    },
-    "format": "| {icon}  {capacity}%",
-    "format-icons": ["", "", "", "", ""],
-    "max-length": 25
+"battery": {
+  "bat": "BAT0",
+  "interval": 60,
+
+  "states": {
+    "warning": 30,
+    "critical": 15
+  },
+
+  "events": {
+    "on-discharging-warning": "notify-send -u normal 'Low Battery'",
+    "on-discharging-critical": "notify-send -u critical 'Very Low Battery'",
+    "on-charging-100": "notify-send -u normal 'Battery Full!'"
+  },
+
+  // 🔋 descarregando (normal)
+  "format": "| {icon} {capacity}%",
+
+  // ⚡ carregando
+  "format-charging": "| 󰂄 {capacity}%",
+
+  // 🔌 conectado (opcional, às vezes igual ao charging)
+  "format-plugged": "| 🔌 {icon} {capacity}%",
+
+  // ✅ bateria cheia
+  "format-full": "|  100%",
+
+  "format-icons": ["", "", "", "", ""],
+  "max-length": 25
 }
 }
